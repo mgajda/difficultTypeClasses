@@ -27,7 +27,17 @@ and Applicative that is not a Monad_
 
 * Streams as a basic computation, where individual transformations are described within Monad, but composed using Arrow.
   - Unix pipes: grep | cut | uniq | sort
-  - Or HashSort :-)
+  - Or HashSort
+
+* Check examples from PreludeJS
+  - Standard library for LiveScript
+  - CoffeeScript -> CocoJS -> PreludeJS = LiveScript -> CoffeeScript -> ECMAScript
+  - Roy
+    * Brian McKenna
+      - https://github.com/fantasyland/fantasy-land - example translation of classes to JS
+      - https://github.com/fantasyland/implementations.md - example instances
+
+* Callback hell example
 
 ## Other aspects...
 

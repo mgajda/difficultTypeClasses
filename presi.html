@@ -32,28 +32,33 @@ class: center, middle
 ---
 # What is a typeclass?
 
-# Predicate on type:
-* ```(==) :: Eq a =&gt; a -&gt; a -&gt; Bool```
-# Hierarchy of _properties_
-# Type-safe virtual method/class mechanism
-# Generalization of operations common between types
-# Encapsulates _Design patterns_
---
+## Predicate on type:
+```haskell
+(==) :: Eq a =&gt; a -&gt; a -&gt; Bool
+```
+## Hierarchy of _properties_
+## Type-safe virtual method/class mechanism
+## Generalization of operations common between types
+## Encapsulates _Design patterns_
+---
 # Most important type classes in Haskell
 
-# Monad - computation
+## Monad - computation
 * IO
 * transformers
-# Functor - _boxed_ value
-# Applicative (_Functor)
-# Foldable
-# Traversable
---
+## Functor - _boxed_ value
+## Applicative (_Functor)
+## Foldable
+## Traversable
+---
 # How to use monad?
 
-# Problems of sequencing:
-## asynchronous IO computations
-## exception handling code
+## Problems of sequencing:
+### asynchronous IO computations
+### exception handling code
+
+---
+# Monad definition
 
 ```haskell
 class Monad m where
@@ -61,9 +66,10 @@ class Monad m where
   (&gt;&gt;=) :: m a -&gt; (a -&gt; b) -&gt; m b
 ```
 
-# ```return``` - Computation returning pure value
-# ```bind``` - Compute x and then compute y given a value of v
---
+### `return` - Computation returning pure value
+### `bind` - Compute x and then compute y given a value of v
+
+---
 # Monad: exception handling in C
 
 ```C
@@ -76,15 +82,17 @@ if (!fd) { error... } else { // valid descriptor
       data = processRows(buffer+header);
       if (data &le; 0) { error ... } else {
         result = composeResult(header, result);
-	if (result &le; 0) { error ... } else {
-	  return result;
-	}
+    if (result &le; 0) { error ... } else {
+      return result;
+    }
       }
     }
   }
 }
 ```
---
+
+---
+
 # Monad: exception handling in Haskell
 
 ```Haskell
@@ -96,7 +104,7 @@ do contents &lt;- catch (\_ -&gt; Left "Cannot open file") $ readFile "filename
      rows &lt; processRows rest
      composeResult hdr rest
 ```
---
+---
 # Monad: exception handling with explicit bind
 
 ```Haskell
@@ -111,7 +119,7 @@ catch (\_ -&gt; Left "Cannot open file")
   \(hdr, rest) -&gt; processRows rest &gt;&gt;=
   \rows -&gt; composeResult hdr rest
 ```
---
+---
 # Monad: Either
 
 ```Haskell
@@ -121,17 +129,18 @@ instance Monad Either String b where
   return a = Right a
   ma (&gt;&gt;=) mb = case ma of
                         Right r -&gt; mb r
-			err     -&gt; err
+            err     -&gt; err
 ```
---
+---
 # Monad Either in JavaScript
 
---
+---
 # Monad in action: asynchronous computation in JS
 
+---
+# Callback hell example
 
-
---
+---
 # Functor: type generator
 
 ```Haskell
@@ -148,9 +157,68 @@ Example:
 
 ```Haskell
 instance Functor f =&gt; Applicative f
-  fmap :: (a ->gt; b) ->gt; f a ->gt; f b
+  fmap :: (a -&gt;gt; b) -&gt;gt; f a -&gt;gt; f b
 ```
 # Array
+
+---
+# Change Applicative to nested _for_ loops
+
+---
+# Arrow: domain problems
+
+# Flowchart/stream computations
+* Arrow + tag
+
+_Here to put an example flowchart_
+
+```haskell
+read -&gt; cutHeader -&gt; separate columns -&gt; compare consecutive -&gt;
+```
+---
+# Arrow class definition
+```haskell
+class Arrow arr where
+  pure :: in -&gt; out -&gt; in `arr` out
+  (***) :: (leftIn `arr` leftOut)
+       -&gt; (rightIn `arr` rightOut)
+       -&gt; (leftIn, rightIn) `arr` (rightIn, rightOut)
+  (***) :: (in `arr` leftOut)
+       -&gt; (in `arr` rightOut)
+       -&gt; in `arr` (leftOut, rightOut)
+```
+
+---
+
+# Category
+
+## Lenses are `Category`, but not an `Arrow`.
+(Because injection `arr` does not work.)
+
+```haskell
+data Lens a b = Lens { get :: a -&gt;b
+                     , set :: b -&gt; a -&gt; a }
+```
+
+---
+# Category example: Time representations
+
+```haskell
+set (datetime &gt;&gt;&gt;
+     time     &gt;&gt;&gt;
+     hours) :: Int
+            -&gt; DatetimeWithZone
+            -&gt; DatetimeWithTimeZone
+
+Date
+Time
+Hour
+Minutes
+
+DateTime
+DateTimeWithZone
+TimeZone
+```
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
