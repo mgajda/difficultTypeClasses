@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      img { max-height: 40%; max-width: 100%; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Type classes that seem most difficult for beginners
+### Tim K. Oxley
+### Michal J. Gajda
+
+## Presented on Haskell.SG
+
+### Sep 22nd 2015
+---
+# What is a typeclass?
+
+# Predicate on type:
+* ```(==) :: Eq a =&gt; a -&gt; a -&gt; Bool```
+# Hierarchy of _properties_
+# Type-safe virtual method/class mechanism
+# Generalization of operations common between types
+# Encapsulates _Design patterns_
+--
+# Most important type classes in Haskell
+
+# Monad - computation
+* IO
+* transformers
+# Functor - _boxed_ value
+# Applicative (_Functor)
+# Foldable
+# Traversable
+--
+# How to use monad?
+
+# Problems of sequencing:
+## asynchronous IO computations
+## exception handling code
+
+```haskell
+class Monad m where
+  return :: m a
+  (&gt;&gt;=) :: m a -&gt; (a -&gt; b) -&gt; m b
+```
+
+# ```return``` - Computation returning pure value
+# ```bind``` - Compute x and then compute y given a value of v
+--
+# Monad: exception handling in C
+
+```C
+int fd = fopen("filename", "r");
+if (!fd) { error... } else { // valid descriptor
+  inputData = fread(fd, buffer, 4096);
+  if (block &le; 0) { error ... } else {
+    header = parseHeader(buffer);
+    if (header &le;  0) { error ... } else {
+      data = processRows(buffer+header);
+      if (data &le; 0) { error ... } else {
+        result = composeResult(header, result);
+	if (result &le; 0) { error ... } else {
+	  return result;
+	}
+      }
+    }
+  }
+}
+```
+--
+# Monad: exception handling in Haskell
+
+```Haskell
+do contents &lt;- catch (\_ -&gt; Left "Cannot open file") $ readFile "filename"
+   return $ runEither $ do -- Here in Either monad
+     realContents &lt;- contents
+     when (length realContents &lt; 4096) $ fail "File too short"
+     (hdr, rest) &lt; parseHeader realContents
+     rows &lt; processRows rest
+     composeResult hdr rest
+```
+--
+# Monad: exception handling with explicit bind
+
+```Haskell
+catch (\_ -&gt; Left "Cannot open file")
+      (readFile "filename")contents &gt;&gt;=
+\contents -&gt;
+  return $ runEither (-- Here in Either monad
+  contents &gt;&gt;=
+  \realContents -&gt; when (length realContents &lt; 4096)
+                           (fail "File too short") &gt;&gt;
+  parseHeader realContents &gt;&gt;=
+  \(hdr, rest) -&gt; processRows rest &gt;&gt;=
+  \rows -&gt; composeResult hdr rest
+```
+--
+# Monad: Either
+
+```Haskell
+data Either a b = Left  a -- error
+                | Right b -- correct result
+instance Monad Either String b where
+  return a = Right a
+  ma (&gt;&gt;=) mb = case ma of
+                        Right r -&gt; mb r
+			err     -&gt; err
+```
+--
+# Monad Either in JavaScript
+
+--
+# Monad in action: asynchronous computation in JS
+
+
+
+--
+# Functor: type generator
+
+```Haskell
+instance Functor f where
+  fmap :: (a ->gt; b) ->gt; f a ->gt; f b
+```
+
+Example:
+* list or infinite list (series)
+* 
+
+# Applicative: functor with _zipping_
+
+
+```Haskell
+instance Functor f =&gt; Applicative f
+  fmap :: (a ->gt; b) ->gt; f a ->gt; f b
+```
+# Array
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+    <!---script src="remark/src/remark.js"--->
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
