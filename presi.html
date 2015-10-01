@@ -120,9 +120,9 @@ if (!fd) { error... } else { // valid descriptor
       data = processRows(buffer+header);
       if (data &le; 0) { error ... } else {
         result = composeResult(header, result);
-    if (result &le; 0) { error ... } else {
-      return result;
-    }
+        if (result &le; 0) { error ... } else {
+          return result;
+        }
       }
     }
   }
