@@ -65,7 +65,8 @@ class: center, middle
 ---
 # What is a monad?
 
-### _Here screenshot_
+![image](https://cloud.githubusercontent.com/assets/43438/10219714/cf7c5186-6873-11e5-8ebc-e19384fc5db2.png)
+
 ### Unforgettables?
 ### Irreversibles?
 ### Uncancellables?
@@ -99,6 +100,18 @@ class CoMonad w where
   duplicate :: w a -> w (w a)
   extract :: w a -> a
 ```
+
+```js
+fs.readFile('a.txt', (err, fileA) => {
+  fs.readFile('b.txt', (err, fileB) => {
+    concat(fileA, fileB)
+  })
+})
+
+```
+
+### Monad
+
 
 
 ### `return` - Computation returning pure value
