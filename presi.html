@@ -63,6 +63,15 @@ class: center, middle
 ### Traversable
 
 ---
+# What is a monad?
+
+### _Here screenshot_
+### Unforgettables?
+### Irreversibles?
+### Uncancellables?
+### Consequences?
+
+---
 
 # How to use monad?
 
@@ -76,14 +85,29 @@ class: center, middle
 
 ```haskell
 class Monad m where
-  return :: m a
-  (&gt;&gt;=) :: m a -&gt; (a -&gt; b) -&gt; m b
+  return :: a -&gt; m a
+  (&gt;&gt;=) :: m a -&gt; (a -&gt; m b) -&gt; m b
+
+  join :: m (m a) -> m a
+
+test :: (Monad m, Monad n) =&gt; a -&gt; (m a, n a)
+test x = (return x, return x)
 ```
+```haskell
+class CoMonad w where
+  extend :: (w a -> b) -> w a -> w b
+  duplicate :: w a -> w (w a)
+  extract :: w a -> a
+```
+
 
 ### `return` - Computation returning pure value
 ### `bind` - Compute x and then compute y given a value of v
 
+* Here `m`, and `a` are type variables.
+
 ---
+
 # Monad: exception handling in C
 
 ```C
