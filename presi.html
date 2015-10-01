@@ -32,25 +32,29 @@ class: center, middle
 ---
 # What is a typeclass?
 
-## Predicate on type:
+### Predicate on type:
 ```haskell
 (==) :: Eq a =&gt; a -&gt; a -&gt; Bool
 ```
-## Hierarchy of _properties_
-## Type-safe virtual method/class mechanism
-## Generalization of operations common between types
-## Encapsulates _Design patterns_
+### Hierarchy of _properties_
+### Type-safe virtual method/class mechanism
+### Generalization of operations common between types
+### Encapsulates _Design patterns_
+
 ---
+
 # Most important type classes in Haskell
 
-## Monad - computation
+### Monad - computation
 * IO
 * transformers
-## Functor - _boxed_ value
-## Applicative (_Functor)
-## Foldable
-## Traversable
+### Functor - _boxed_ value
+### Applicative (_Functor)
+### Foldable
+### Traversable
+
 ---
+
 # How to use monad?
 
 ## Problems of sequencing:
@@ -58,6 +62,7 @@ class: center, middle
 ### exception handling code
 
 ---
+
 # Monad definition
 
 ```haskell
