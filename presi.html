@@ -36,47 +36,47 @@ class: center, middle
 ```haskell
 (==) :: Eq a =&gt; a -&gt; a -&gt; Bool
 ```
-## Hierarchy of _properties_
-## Type-safe virtual method/class mechanism
-## Generalization of operations common between types
+## Hierarchy of _properties_
+## Type-safe virtual method/class mechanism
+## Generalization of operations common between types
 ## Encapsulates _Design patterns_
 ---
-# Most important type classes in Haskell
+# Most important type classes in Haskell
 
-## Monad - computation
-* IO
-* transformers
-## Functor - _boxed_ value
-## Applicative (_Functor)
-## Foldable
-## Traversable
+## Monad - computation
+* IO
+* transformers
+## Functor - _boxed_ value
+## Applicative (_Functor)
+## Foldable
+## Traversable
 ---
-# How to use monad?
+# How to use monad?
 
 ## Problems of sequencing:
-### asynchronous IO computations
-### exception handling code
+### asynchronous IO computations
+### exception handling code
 
 ---
-# Monad definition
+# Monad definition
 
 ```haskell
 class Monad m where
-  return :: m a
-  (&gt;&gt;=) :: m a -&gt; (a -&gt; b) -&gt; m b
+  return :: m a
+  (&gt;&gt;=) :: m a -&gt; (a -&gt; b) -&gt; m b
 ```
 
-### `return` - Computation returning pure value
-### `bind` - Compute x and then compute y given a value of v
+### `return` - Computation returning pure value
+### `bind` - Compute x and then compute y given a value of v
 
 ---
-# Monad: exception handling in C
+# Monad: exception handling in C
 
 ```C
 int fd = fopen("filename", "r");
 if (!fd) { error... } else { // valid descriptor
   inputData = fread(fd, buffer, 4096);
-  if (block &le; 0) { error ... } else {
+  if (block &le; 0) { error ... } else {
     header = parseHeader(buffer);
     if (header &le;  0) { error ... } else {
       data = processRows(buffer+header);
@@ -93,25 +93,25 @@ if (!fd) { error... } else { // valid descriptor
 
 ---
 
-# Monad: exception handling in Haskell
+# Monad: exception handling in Haskell
 
 ```Haskell
-do contents &lt;- catch (\_ -&gt; Left "Cannot open file") $ readFile "filename"
-   return $ runEither $ do -- Here in Either monad
+do contents &lt;- catch (\_ -&gt; Left "Cannot open file") $ readFile "filename"
+   return $ runEither $ do -- Here in Either monad
      realContents &lt;- contents
-     when (length realContents &lt; 4096) $ fail "File too short"
+     when (length realContents &lt; 4096) $ fail "File too short"
      (hdr, rest) &lt; parseHeader realContents
      rows &lt; processRows rest
      composeResult hdr rest
 ```
 ---
-# Monad: exception handling with explicit bind
+# Monad: exception handling with explicit bind
 
 ```Haskell
 catch (\_ -&gt; Left "Cannot open file")
       (readFile "filename")contents &gt;&gt;=
 \contents -&gt;
-  return $ runEither (-- Here in Either monad
+  return $ runEither (-- Here in Either monad
   contents &gt;&gt;=
   \realContents -&gt; when (length realContents &lt; 4096)
                            (fail "File too short") &gt;&gt;
@@ -120,11 +120,11 @@ catch (\_ -&gt; Left "Cannot open file")
   \rows -&gt; composeResult hdr rest
 ```
 ---
-# Monad: Either
+# Monad: Either
 
 ```Haskell
 data Either a b = Left  a -- error
-                | Right b -- correct result
+                | Right b -- correct result
 instance Monad Either String b where
   return a = Right a
   ma (&gt;&gt;=) mb = case ma of
@@ -132,34 +132,34 @@ instance Monad Either String b where
             err     -&gt; err
 ```
 ---
-# Monad Either in JavaScript
+# Monad Either in JavaScript
 
 ---
-# Monad in action: asynchronous computation in JS
+# Monad in action: asynchronous computation in JS
 
 ---
-# Callback hell example
+# Callback hell example
 
 ---
-# Functor: type generator
+# Functor: type generator
 
 ```Haskell
 instance Functor f where
-  fmap :: (a ->gt; b) ->gt; f a ->gt; f b
+  fmap :: (a ->gt; b) ->gt; f a ->gt; f b
 ```
 
 Example:
-* list or infinite list (series)
+* list or infinite list (series)
 * 
 
-# Applicative: functor with _zipping_
+# Applicative: functor with _zipping_
 
 
 ```Haskell
 instance Functor f =&gt; Applicative f
-  fmap :: (a -&gt;gt; b) -&gt;gt; f a -&gt;gt; f b
+  fmap :: (a -&gt;gt; b) -&gt;gt; f a -&gt;gt; f b
 ```
-# Array
+# Array
 
 ---
 # Change Applicative to nested _for_ loops
@@ -201,7 +201,7 @@ data Lens a b = Lens { get :: a -&gt;b
 ```
 
 ---
-# Category example: Time representations
+# Category example: Time representations
 
 ```haskell
 set (datetime &gt;&gt;&gt;
